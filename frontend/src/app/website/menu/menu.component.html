@@ -1,0 +1,213 @@
+<div class="public-menu-page">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="brand">
+            <span class="brand-icon">🍗</span>
+            <div class="brand-text">
+                <span class="brand-name">Asadero La Mocahua</span>
+                <span class="brand-slogan">La Tradición del buen sabor</span>
+            </div>
+        </div>
+        <div class="nav-links">
+            <a routerLink="/welcome" class="nav-link">Inicio</a>
+            <a routerLink="/website/menu" class="nav-link active">Menú</a>
+
+            <ng-container *ngIf="!isClientLoggedIn">
+                <a routerLink="/login" [queryParams]="{role: 'cliente', title: 'Cliente'}" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Ingresar / Registrarse
+                </a>
+            </ng-container>
+
+            <ng-container *ngIf="isClientLoggedIn">
+                <a routerLink="/website/my-orders" class="nav-link">Mis Pedidos</a>
+                <button class="nav-link cart-btn" (click)="showCartModal = true">
+                    <i class="fas fa-shopping-cart"></i> Mi Carrito
+                    <span class="cart-badge" *ngIf="getCartCount() > 0">{{ getCartCount() }}</span>
+                </button>
+                <div class="user-menu">
+                    <span class="user-greeting">Hola, {{ clientUser?.name }}</span>
+                    <button class="btn-logout" (click)="logout()"><i class="fas fa-sign-out-alt"></i> Salir</button>
+                </div>
+            </ng-container>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="hero-badge">🔥 Pollos Asados al Carbón</span>
+            <h1>Asadero La Mocahua</h1>
+            <p>La Tradición del buen sabor. Desde nuestro asador a tu mesa con el auténtico sabor a carbón.</p>
+            <div class="hero-info">
+                <div class="hero-info-item">
+                    <i class="fas fa-motorcycle"></i>
+                    <span>Servicio a Domicilio</span>
+                </div>
+                <div class="hero-info-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>0960293965</span>
+                </div>
+                <div class="hero-info-item">
+                    <i class="fas fa-fire-alt"></i>
+                    <span>Asado al Carbón</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Delivery Banner -->
+    <div class="delivery-banner">
+        <div class="delivery-content">
+            <i class="fas fa-motorcycle"></i>
+            <span><strong>Servicio a Domicilio:</strong> 0960293965 / 0999817303 / 03 288 5305</span>
+        </div>
+    </div>
+
+    <!-- Menu Section -->
+    <main class="menu-container">
+        <div class="menu-section-title">
+            <h2>Nuestro Menú</h2>
+            <p>Elige entre nuestras deliciosas opciones preparadas con la mejor tradición</p>
+        </div>
+
+        <!-- Categories Filter -->
+        <div class="categories-filter">
+            <button class="category-btn" [class.active]="selectedCategory === null" (click)="filterByCategory(null)">
+                <i class="fas fa-th-large"></i> Todos
+            </button>
+            <button *ngFor="let cat of categories" class="category-btn" [class.active]="selectedCategory === cat.id"
+                (click)="filterByCategory(cat.id)">
+                <i class="fas" [ngClass]="{
+                    'fa-drumstick-bite': cat.nombre.includes('Pollo'),
+                    'fa-star': cat.nombre.includes('Especialidad'),
+                    'fa-utensils': cat.nombre.includes('Menú'),
+                    'fa-glass-cheers': cat.nombre.includes('Bebida')
+                }"></i>
+                {{ cat.nombre }}
+            </button>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="products-grid" *ngIf="!loading; else loadingTemplate">
+            <div class="product-card" *ngFor="let product of filteredProducts"
+                [attr.data-category]="product.categoria_id">
+                <div class="product-image">
+                    <img [src]="product.url_imagen || 'https://images.unsplash.com/photo-1598103442097-8b74df4e1b8d?q=80&w=800&auto=format&fit=crop'"
+                        [alt]="product.nombre">
+                    <div class="product-badge" *ngIf="product.precio_venta >= 10">⭐ Popular</div>
+                </div>
+                <div class="product-info">
+                    <div class="title-price">
+                        <h3>{{ product.nombre }}</h3>
+                        <span class="price">${{ product.precio_venta }}</span>
+                    </div>
+                    <p class="description">{{ product.descripcion || 'Preparado con los mejores ingredientes y la
+                        tradición de La Mocahua.' }}</p>
+                    <div class="meta">
+                        <span class="time"><i class="far fa-clock"></i> {{ product.tiempo_preparacion || 15 }}
+                            min</span>
+                        <span class="includes" *ngIf="product.categoria_id == 1"><i class="fas fa-check-circle"></i>
+                            Incluye guarnición</span>
+                    </div>
+                    <button class="btn-order" (click)="handleOrder(product)">
+                        <i class="fas fa-cart-plus"></i> Agregar al carrito
+                    </button>
+                </div>
+            </div>
+
+            <div *ngIf="filteredProducts.length === 0 && !loading" class="empty-state">
+                <i class="fas fa-search"></i>
+                <p>No hay platillos disponibles en esta categoría por el momento.</p>
+            </div>
+        </div>
+
+        <ng-template #loadingTemplate>
+            <div class="loading-state">
+                <div class="spinner"></div>
+                <p>Cargando nuestro delicioso menú...</p>
+            </div>
+        </ng-template>
+    </main>
+
+    <!-- Cart Modal -->
+    <div class="modal-overlay" *ngIf="showCartModal" (click)="showCartModal = false">
+        <div class="modal-content side-panel" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2>🛒 Tu Carrito</h2>
+                <button class="close-btn" (click)="showCartModal = false">&times;</button>
+            </div>
+
+            <div class="cart-items" *ngIf="cart.length > 0">
+                <div class="cart-item" *ngFor="let item of cart">
+                    <div class="item-details">
+                        <h4>{{ item.nombre }}</h4>
+                        <span class="item-price">${{ item.precio_unitario }}</span>
+                    </div>
+                    <div class="item-actions">
+                        <button class="qty-btn" (click)="removeFromCart(item.producto_id)">-</button>
+                        <span>{{ item.cantidad }}</span>
+                        <button class="qty-btn"
+                            (click)="handleOrder({id: item.producto_id, nombre: item.nombre, precio_venta: item.precio_unitario, tiene_iva: item.tiene_iva})">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="empty-cart" *ngIf="cart.length === 0">
+                <i class="fas fa-shopping-basket"></i>
+                <p>Tu carrito está vacío</p>
+            </div>
+
+            <div class="cart-footer" *ngIf="cart.length > 0">
+                <div class="order-settings">
+                    <label>Tipo de Consumo:</label>
+                    <select [(ngModel)]="orderType">
+                        <option value="LOCAL">Comer Aquí</option>
+                        <option value="PARA_LLEVAR">Para Llevar</option>
+                        <option value="DOMICILIO">A Domicilio</option>
+                    </select>
+                </div>
+
+                <div class="order-settings" *ngIf="orderType === 'LOCAL'">
+                    <label>Número de Mesa:</label>
+                    <input type="number" [(ngModel)]="tableNumber" placeholder="Nro de Mesa">
+                </div>
+
+                <div class="cart-total">
+                    <span>Total Estimado</span>
+                    <strong>${{ getCartTotal().toFixed(2) }}</strong>
+                </div>
+                <!-- Nota: El monto exacto con IVA se calcula en el Backend -->
+
+                <button class="btn-submit-order" (click)="submitOrder()">
+                    <i class="fas fa-check-circle"></i> Procesar Pedido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <span class="footer-logo">🍗</span>
+                <h3>Asadero La Mocahua</h3>
+                <p>La Tradición del buen sabor</p>
+            </div>
+            <div class="footer-contact">
+                <h4>Servicio a Domicilio</h4>
+                <p><i class="fas fa-phone-alt"></i> 0960293965</p>
+                <p><i class="fas fa-phone-alt"></i> 0999817303</p>
+                <p><i class="fas fa-phone"></i> 03 288 5305</p>
+            </div>
+            <div class="footer-hours">
+                <h4>Horario</h4>
+                <p>Lunes a Domingo</p>
+                <p>Almuerzo y Cena</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Asadero La Mocahua. Tu mejor elección.</p>
+        </div>
+    </footer>
+</div>

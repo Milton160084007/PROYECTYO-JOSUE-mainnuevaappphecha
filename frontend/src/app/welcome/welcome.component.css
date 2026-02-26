@@ -1,0 +1,220 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap');
+
+.welcome-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(26, 15, 0, 0.92), rgba(90, 45, 0, 0.85)), url('https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?q=80&w=2070&auto=format&fit=crop') center/cover fixed;
+    padding: 40px 20px;
+    font-family: 'Poppins', sans-serif;
+    color: white;
+}
+
+.welcome-header {
+    text-align: center;
+    margin-bottom: 50px;
+    animation: fadeInDown 0.8s ease-out;
+}
+
+.logo-icon {
+    font-size: 64px;
+    display: block;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.welcome-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 46px;
+    font-weight: 900;
+    margin: 0 0 10px 0;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(135deg, #fff, #ffd54f);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.welcome-header p {
+    font-size: 17px;
+    color: #c8a87c;
+    margin: 0;
+    font-weight: 400;
+    font-style: italic;
+}
+
+.roles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 25px;
+    width: 100%;
+    max-width: 1200px;
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.role-card {
+    background: rgba(90, 45, 0, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 213, 79, 0.12);
+    border-radius: 20px;
+    padding: 30px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.role-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 213, 79, 0.08), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.role-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    border-color: rgba(255, 213, 79, 0.35);
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7);
+}
+
+.role-card:hover::before {
+    opacity: 1;
+}
+
+.client-card {
+    grid-column: 1 / -1;
+    max-width: 400px;
+    margin: 0 auto 20px auto;
+    background: linear-gradient(135deg, rgba(212, 113, 14, 0.2), rgba(180, 90, 0, 0.35));
+    border-color: rgba(255, 140, 0, 0.25);
+}
+
+.client-card:hover {
+    border-color: rgba(255, 140, 0, 0.5);
+    box-shadow: 0 20px 40px -10px rgba(212, 113, 14, 0.3);
+}
+
+.client-card .card-icon {
+    background: linear-gradient(135deg, #ff8c00, #d4710e);
+}
+
+.card-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8b6b4a, #5a3d1e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px auto;
+    font-size: 28px;
+    color: white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+}
+
+.role-card:hover .card-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.staff-card:nth-child(2) .card-icon {
+    background: linear-gradient(135deg, #6d4c41, #3e2723);
+}
+
+/* Admin */
+.staff-card:nth-child(3) .card-icon {
+    background: linear-gradient(135deg, #ff8c00, #e65100);
+}
+
+/* Cajero */
+.staff-card:nth-child(4) .card-icon {
+    background: linear-gradient(135deg, #a1887f, #6d4c41);
+}
+
+/* Mesero */
+.staff-card:nth-child(5) .card-icon {
+    background: linear-gradient(135deg, #d4710e, #bf360c);
+}
+
+/* Cocina */
+
+h3 {
+    margin: 0 0 10px 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.role-card p {
+    margin: 0;
+    font-size: 14px;
+    color: #c8a87c;
+    line-height: 1.5;
+}
+
+.client-card p {
+    color: #ffd54f;
+}
+
+.footer-info {
+    margin-top: 60px;
+    text-align: center;
+    color: #8b6b4a;
+    font-size: 12px;
+    animation: fadeIn 1s ease-out 0.6s both;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* responsive grid adjustments */
+@media (min-width: 1024px) {
+    .roles-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .client-card {
+        grid-column: 1 / -1;
+    }
+}

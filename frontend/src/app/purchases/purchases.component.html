@@ -1,0 +1,169 @@
+<div class="dashboard-page">
+    <!-- Sidebar (reutilizado de los ejemplos del proyecto) -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-utensils"></i>
+            <span>La Mocahua</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a routerLink="/dashboard" class="nav-item">
+                <i class="fas fa-chart-line"></i><span>Dashboard</span>
+            </a>
+            <a routerLink="/purchases" class="nav-item active">
+                <i class="fas fa-shopping-cart"></i><span>Compras</span>
+            </a>
+            <!-- Botón atrás al dashboard general -->
+            <a (click)="goBack()" class="nav-item" style="cursor:pointer; margin-top:20px; color:#ef4444;">
+                <i class="fas fa-arrow-left"></i><span>Volver</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <h2>🛒 Gestión de Compras</h2>
+            <div class="user-info">
+                <span>{{ currentUser?.name }}</span>
+                <span class="role-badge">{{ currentUser?.role_name }}</span>
+            </div>
+        </header>
+
+        <div class="content-wrapper">
+            <div class="action-bar">
+                <button class="btn btn-primary" (click)="openNewPurchaseModal()">
+                    <i class="fas fa-plus"></i> Registrar Nueva Compra
+                </button>
+            </div>
+
+            <!-- Tabla de Historial -->
+            <div class="card">
+                <h3>Historial de Compras</h3>
+
+                <div class="loading-state" *ngIf="loading">
+                    <div class="spinner"></div>
+                    <p>Cargando historial...</p>
+                </div>
+
+                <div class="table-responsive" *ngIf="!loading">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Fecha</th>
+                                <th>Proveedor</th>
+                                <th>Nro. Factura</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let pur of purchases">
+                                <td>#{{ pur.id }}</td>
+                                <td>{{ pur.fecha_compra }}</td>
+                                <td>{{ pur.nombre_proveedor || 'Sin Proveedor' }}</td>
+                                <td>{{ pur.numero_factura || 'N/A' }}</td>
+                                <td class="total-col">${{ pur.total }}</td>
+                            </tr>
+                            <tr *ngIf="purchases.length === 0">
+                                <td colspan="5" class="text-center">No hay compras registradas.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Nueva Compra -->
+    <div class="modal-overlay" *ngIf="showModal">
+        <div class="modal-content side-panel">
+            <div class="modal-header">
+                <h2>Registrar Compra</h2>
+                <button class="close-btn" (click)="closeModal()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Proveedor</label>
+                    <select [(ngModel)]="selectedSupplierId" class="form-control">
+                        <option [ngValue]="null">-- Seleccione Proveedor --</option>
+                        <option *ngFor="let s of suppliers" [value]="s.id">{{ s.nombre }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Nro. de Factura (Opcional)</label>
+                    <input type="text" [(ngModel)]="numFactura" class="form-control"
+                        placeholder="Ej: 001-002-123456789">
+                </div>
+
+                <hr class="divider">
+                <h3>Agregar Insumos</h3>
+
+                <div class="add-item-row">
+                    <div class="flex-2">
+                        <label>Insumo</label>
+                        <select [(ngModel)]="selectedProductId" (change)="onProductSelectChange()" class="form-control">
+                            <option [ngValue]="null">-- Insumo --</option>
+                            <option *ngFor="let p of products" [value]="p.id">{{ p.nombre }}</option>
+                        </select>
+                    </div>
+                    <div class="flex-1">
+                        <label>Cantidad</label>
+                        <input type="number" [(ngModel)]="newQuantity" class="form-control" min="1">
+                    </div>
+                    <div class="flex-1">
+                        <label>Costo U.</label>
+                        <input type="number" step="0.01" [(ngModel)]="newCost" class="form-control" min="0">
+                    </div>
+                    <div class="flex-icon">
+                        <button class="btn btn-primary mt-btn" (click)="addItemToPurchase()">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Detalle Carrito Compra -->
+                <div class="purchase-cart mt-4" *ngIf="cartItems.length > 0">
+                    <h4>Detalle de la Compra</h4>
+                    <table class="simple-table">
+                        <thead>
+                            <tr>
+                                <th>Insumo</th>
+                                <th>Cant.</th>
+                                <th>Costo U.</th>
+                                <th>Subtotal</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of cartItems; let i = index">
+                                <td>{{ item.nombre }}</td>
+                                <td>{{ item.cantidad }}</td>
+                                <td>${{ item.costo_unitario }}</td>
+                                <td>${{ (item.cantidad * item.costo_unitario).toFixed(2) }}</td>
+                                <td>
+                                    <button class="btn-icon btn-danger" (click)="removeItem(i)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="purchase-total-row">
+                        <span>Total de Compra:</span>
+                        <h2>${{ getPurchaseTotal().toFixed(2) }}</h2>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+                <button class="btn btn-success" [disabled]="submitLoading" (click)="submitPurchase()">
+                    {{ submitLoading ? 'Guardando...' : 'Guardar Compra' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

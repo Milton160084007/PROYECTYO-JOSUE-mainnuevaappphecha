@@ -1,0 +1,121 @@
+<div class="layout" [class.sidebar-collapsed]="!sidebarOpen">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <span class="logo">🍗</span>
+            <h2>Asadero La Mocahua</h2>
+        </div>
+        <nav class="sidebar-nav">
+            @for (item of getMenuItems(); track item.route) {
+            <a class="nav-item" [routerLink]="item.route" routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}">
+                <span class="nav-icon">{{ item.icon }}</span>
+                <span class="nav-label">{{ item.label }}</span>
+            </a>
+            }
+        </nav>
+        <div class="sidebar-footer">
+            <button class="logout-btn" (click)="logout()">
+                🚪 <span>Cerrar Sesión</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="top-bar">
+            <button class="menu-toggle" (click)="toggleSidebar()">☰</button>
+            <div class="top-bar-right">
+                <span class="user-role-badge">{{ currentUser?.role_name }}</span>
+                <span class="user-name">{{ currentUser?.name }}</span>
+            </div>
+        </header>
+
+        <div class="content-area">
+            <div class="welcome-banner">
+                <div>
+                    <h1>Bienvenido, {{ currentUser?.name }} 👋</h1>
+                    <p>Panel de control — {{ currentUser?.role_name }}</p>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card stat-orders">
+                    <div class="stat-icon">📋</div>
+                    <div class="stat-info">
+                        <span class="stat-value">{{ stats.pedidos_hoy || 0 }}</span>
+                        <span class="stat-label">Pedidos Hoy</span>
+                    </div>
+                </div>
+                <div class="stat-card stat-revenue">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-info">
+                        <span class="stat-value">${{ stats.ventas_hoy || '0.00' }}</span>
+                        <span class="stat-label">Ventas Hoy</span>
+                    </div>
+                </div>
+                <div class="stat-card stat-pending">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-info">
+                        <span class="stat-value">{{ stats.pedidos_pendientes || 0 }}</span>
+                        <span class="stat-label">Pendientes</span>
+                    </div>
+                </div>
+                <div class="stat-card stat-stock">
+                    <div class="stat-icon">⚠️</div>
+                    <div class="stat-info">
+                        <span class="stat-value">{{ stats.insumos_stock_bajo || 0 }}</span>
+                        <span class="stat-label">Stock Bajo</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="section-header">
+                <h2>Acciones Rápidas</h2>
+            </div>
+            <div class="quick-actions-grid">
+                @for (item of getMenuItems(); track item.route) {
+                @if (item.route !== '/dashboard') {
+                <div class="action-card" (click)="navigate(item.route)">
+                    <span class="action-icon">{{ item.icon }}</span>
+                    <h3>{{ item.label }}</h3>
+                </div>
+                }
+                }
+            </div>
+
+            <!-- Recent Orders -->
+            @if (stats.ultimos_pedidos && stats.ultimos_pedidos.length > 0) {
+            <div class="section-header">
+                <h2>Últimos Pedidos</h2>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Usuario</th>
+                        <th>Mesa</th>
+                        <th>Tipo</th>
+                        <th>Estado</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (order of stats.ultimos_pedidos; track order.id) {
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.usuario || '—' }}</td>
+                        <td>{{ order.numero_mesa || '—' }}</td>
+                        <td>{{ order.tipo_pedido }}</td>
+                        <td><span class="badge" [class]="getEstadoBadge(order.estado)">{{ order.estado }}</span></td>
+                        <td><strong>${{ order.total }}</strong></td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+            }
+        </div>
+    </main>
+</div>

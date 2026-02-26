@@ -1,0 +1,63 @@
+<div class="register-container">
+    <div class="register-box">
+        <div class="brand">
+            <i class="fas fa-utensils status-icon"></i>
+            <h2>La Mocahua</h2>
+        </div>
+        <h3>Crear Cuenta</h3>
+        <p class="subtitle">Únete para realizar pedidos deliciosos</p>
+
+        <form (ngSubmit)="onRegister()">
+            <div class="form-group">
+                <label>Nombre Completo</label>
+                <div class="input-container">
+                    <i class="fas fa-user"></i>
+                    <input type="text" [(ngModel)]="nombre" name="nombre" placeholder="Juan Pérez" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Correo Electrónico</label>
+                <div class="input-container">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" [(ngModel)]="email" name="email" placeholder="juan@ejemplo.com" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Teléfono (Opcional)</label>
+                <div class="input-container">
+                    <i class="fas fa-phone"></i>
+                    <input type="tel" [(ngModel)]="telefono" name="telefono" placeholder="0999999999">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Contraseña</label>
+                <div class="input-container">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" [(ngModel)]="password" name="password" placeholder="Mínimo 6 caracteres"
+                        required>
+                </div>
+            </div>
+
+            <div *ngIf="error" class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i> {{ error }}
+            </div>
+
+            <div *ngIf="successMsg" class="alert alert-success">
+                <i class="fas fa-check-circle"></i> {{ successMsg }}
+            </div>
+
+            <button type="submit" class="btn-register" [disabled]="loading">
+                <span *ngIf="!loading">Registrarse</span>
+                <div class="spinner" *ngIf="loading"></div>
+            </button>
+
+            <p class="login-link">
+                ¿Ya tienes una cuenta? <a routerLink="/login" [queryParams]="{role: 'cliente', title: 'Cliente'}">Inicia
+                    sesión</a>
+            </p>
+        </form>
+    </div>
+</div>

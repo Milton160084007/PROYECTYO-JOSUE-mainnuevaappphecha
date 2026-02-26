@@ -1,0 +1,70 @@
+<div class="my-orders-page">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="brand">
+            <i class="fas fa-utensils"></i>
+            <span>La Mocahua</span>
+        </div>
+        <div class="nav-links">
+            <a routerLink="/welcome" class="nav-link">Inicio</a>
+            <a routerLink="/website/menu" class="nav-link">Menú</a>
+            <a routerLink="/website/my-orders" class="nav-link active">Mis Pedidos</a>
+            <div class="user-menu">
+                <span class="user-greeting">Hola, {{ clientUser?.name }}</span>
+                <button class="btn-logout" (click)="logout()"><i class="fas fa-sign-out-alt"></i> Salir</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="orders-container">
+        <div class="page-header">
+            <h2><i class="fas fa-receipt"></i> Historial de Pedidos</h2>
+            <button class="btn-primary" routerLink="/website/menu">Nuevos Platillos</button>
+        </div>
+
+        <div class="orders-list" *ngIf="!loading && orders.length > 0">
+            <div class="order-card" *ngFor="let order of orders">
+                <div class="order-header">
+                    <div>
+                        <span class="order-number">Pedido #{{ order.id }}</span>
+                        <span class="order-type badge-{{ order.tipo_pedido.toLowerCase() }}">{{ order.tipo_pedido
+                            }}</span>
+                    </div>
+                    <div>
+                        <span class="order-date">{{ order.fecha_creacion }}</span>
+                        <span class="badge" [ngClass]="getBadge(order.estado)">{{ order.estado }}</span>
+                    </div>
+                </div>
+
+                <div class="order-body">
+                    <p class="summary-text">Resumen de cuenta: Incluye el costo del platillo e impuestos grabados dentro
+                        del local.</p>
+                </div>
+
+                <div class="order-footer">
+                    <div class="totals-row">
+                        <span>Subtotal: ${{ order.subtotal }}</span>
+                        <span>IVA: ${{ order.monto_iva }}</span>
+                        <span class="grand-total">Total: <strong>${{ order.total }}</strong></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="empty-state" *ngIf="!loading && orders.length === 0">
+            <i class="fas fa-box-open"></i>
+            <h3>No tienes pedidos aún</h3>
+            <p>¡Explora nuestro delicioso menú y haz tu primer pedido hoy mismo!</p>
+            <button routerLink="/website/menu" class="btn-primary mt-3">Ir al Menú</button>
+        </div>
+
+        <div class="loading-state" *ngIf="loading">
+            <div class="spinner"></div>
+            <p>Cargando tus pedidos...</p>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 La Mocahua Restaurante. Tu mejor elección.</p>
+    </footer>
+</div>
