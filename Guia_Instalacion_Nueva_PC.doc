@@ -1,0 +1,106 @@
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head><meta charset="utf-8"><title>Guía de Instalación</title>
+<style>
+body { font-family: Calibri, sans-serif; }
+h1 { color: #2f5496; border-bottom: 2px solid #2f5496; padding-bottom: 5px; }
+h2 { color: #4472c4; margin-top: 20px;}
+ul, ol { margin-left: 20px; }
+li { margin-bottom: 10px; }
+.code-block { background-color: #f2f2f2; padding: 10px; border: 1px solid #ccc; font-family: monospace; }
+</style>
+</head>
+<body>
+<h1>Guía de Instalación y Ejecución del Proyecto</h1>
+<p>Esta guía explica paso a paso cómo abrir y ejecutar la aplicación (Frontend Angular y Backend PHP) en una computadora nueva.</p>
+
+<h2>Requisitos Previos</h2>
+<p>Antes de comenzar, asegúrate de tener instalados los siguientes programas en la nueva computadora:</p>
+<ol>
+    <li><b>XAMPP</b>: Para correr el servidor de base de datos MySQL y proveer PHP.
+        <ul>
+            <li>Descárgalo de: apachefriends.org</li>
+            <li>Instálalo en la ruta por defecto: <code>C:\xampp</code></li>
+        </ul>
+    </li>
+    <li><b>Node.js</b>: Para poder ejecutar el frontend de Angular.
+        <ul>
+            <li>Descárgalo de: nodejs.org (Versión LTS recomendada)</li>
+            <li>Al instalar, asegúrate de dejar marcada la opción que agrega Node al PATH del sistema.</li>
+        </ul>
+    </li>
+    <li><b>Git</b>: Para descargar el código.
+        <ul>
+            <li>Descárgalo de: git-scm.com</li>
+        </ul>
+    </li>
+    <li><b>Angular CLI</b>: (Se instala después de Node.js)
+        <ul>
+            <li>Abre tu consola de comandos (CMD o PowerShell) y ejecuta: <br>
+            <div class="code-block">npm install -g @angular/cli</div></li>
+        </ul>
+    </li>
+</ol>
+
+<br><hr>
+
+<h2>Paso 1: Descargar el Código</h2>
+<ol>
+    <li>Abre una consola o terminal en la carpeta donde desees guardar el proyecto.</li>
+    <li>Clona el repositorio ejecutando:
+        <div class="code-block">git clone &lt;URL_DEL_REPOSITORIO&gt;</div>
+    </li>
+    <li>Entra a la carpeta del proyecto recién descargada:
+        <div class="code-block">cd PROYECTYO-JOSUE-main</div>
+    </li>
+</ol>
+
+<br><hr>
+
+<h2>Paso 2: Configurar la Base de Datos (Backend)</h2>
+<ol>
+    <li>Abre <b>XAMPP Control Panel</b>.</li>
+    <li>Inicia los módulos <b>Apache</b> y <b>MySQL</b> dándole clic al botón "Start" en ambos.</li>
+    <li>Abre tu navegador y ve a <code>http://localhost/phpmyadmin/</code>.</li>
+    <li>Crea una nueva base de datos que se llame igual a como esté configurada en tu código (asegúrate de revisar en tu archivo <code>test_data.sql</code> para ver el nombre, o llámale <code>restaurantedb</code> si ese es el que usas).</li>
+    <li>Selecciona esa base de datos y ve a la pestaña <b>Importar</b>.</li>
+    <li>Sube el archivo de configuración SQL de tu proyecto (<code>database_schema.sql</code> y <code>test_data.sql</code>) para crear todas las tablas y datos de prueba.</li>
+</ol>
+
+<br><hr>
+
+<h2>Paso 3: Ejecutar el Backend (PHP)</h2>
+<p>Dado que la aplicación se conecta a PHP usando su servidor de desarrollo interno:</p>
+<ol>
+    <li>Dentro de la carpeta principal del proyecto, haz doble clic en el archivo llamado <b><code>start_backend.bat</code></b>.</li>
+    <li>Si la ruta de XAMPP es la estándar, se abrirá una ventana negra que indica: "Iniciando Servidor de Desarrollo PHP en http://localhost:8000".</li>
+    <li><b>IMPORTANTE:</b> No cierres esta ventana negra, mantenla abierta siempre que estés usando la aplicación.</li>
+</ol>
+
+<br><hr>
+
+<h2>Paso 4: Preparar y Ejecutar el Frontend (Angular)</h2>
+<ol>
+    <li>Abre una nueva consola de comandos y entra a la carpeta del frontend:
+        <div class="code-block">cd frontend</div>
+    </li>
+    <li>Instala las dependencias del proyecto ejecutando:
+        <div class="code-block">npm install</div>
+    </li>
+    <li>Espera a que termine de descargar los paquetes (esto puede demorar un par de minutos).</li>
+    <li>Una vez finalizado, ejecuta el servidor de Angular con:
+        <div class="code-block">ng serve</div>
+    </li>
+    <li>Verás que empieza a compilar. Cuando termine dirá "Compiled successfully".</li>
+</ol>
+
+<br><hr>
+
+<h2>Paso 5: ¡Abrir la Aplicación!</h2>
+<ol>
+    <li>Abre tu navegador web favorito (Chrome, Edge, Firefox).</li>
+    <li>Ingresa a la siguiente dirección: <b><code>http://localhost:4200</code></b></li>
+    <li>Deberás ver la pantalla de inicio de tu aplicación funcionando correctamente.</li>
+</ol>
+
+</body>
+</html>
