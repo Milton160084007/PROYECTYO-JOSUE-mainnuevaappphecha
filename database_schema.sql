@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- Base de Datos: nuevabdpreubarestaurante
--- Versión: 2.0 (Corregida y ampliada para restaurante real)
+-- Versión: 3.0 (Schema consolidado - Asadero La Mocahua)
 -- --------------------------------------------------------
 DROP DATABASE IF EXISTS nuevabdpreubarestaurante;
 CREATE DATABASE nuevabdpreubarestaurante CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -342,34 +342,54 @@ END$$
 
 DELIMITER ;
 
--- --------------------------------------------------------
--- Datos iniciales
--- --------------------------------------------------------
+-- ============================================================
+-- DATOS INICIALES - Asadero La Mocahua
+-- ============================================================
+
+-- Usuarios del sistema
+INSERT INTO usuarios (rol_id, nombre, email, contrasena_hash) VALUES
+(1, 'Admin', 'admin@lamocahua.com', SHA2('admin123', 256)),
+(2, 'Cajero', 'cajero@lamocahua.com', SHA2('cajero123', 256)),
+(4, 'Mesero', 'mesero@lamocahua.com', SHA2('mesero123', 256)),
+(3, 'Cocina', 'cocina@lamocahua.com', SHA2('cocina123', 256));
+
+-- Cliente de ejemplo
+INSERT INTO clientes (tipo_documento, numero_documento, nombre_completo, telefono) VALUES
+('CEDULA', '1234567890', 'Juan Pérez', '0999999999');
+
+-- Categorías del Menú
 INSERT INTO categorias_menu (nombre, descripcion) VALUES 
 ('Pollos Asados al Carbón', 'Todos los platos incluyen papas fritas, arroz y ensalada'),
 ('Especialidades de la Casa', 'Platillos especiales preparados con recetas tradicionales'),
 ('Menú Diario', 'Opciones económicas para el día a día'),
 ('Bebidas y Extras', 'Gaseosas, jugos naturales y porciones adicionales');
 
-INSERT INTO productos_menu (categoria_id, nombre, descripcion, precio_venta, tiene_iva, tiempo_preparacion) VALUES
-(1, 'Pollo Entero', 'Pollo entero asado al carbón con papas fritas, arroz y ensalada', 13.50, TRUE, 30),
-(1, '1/2 Pollo', 'Medio pollo asado al carbón con papas fritas, arroz y ensalada', 7.00, TRUE, 25),
-(1, '1/4 de Pollo Pechuga', 'Cuarto de pollo presa pechuga con papas fritas, arroz y ensalada', 4.00, TRUE, 20),
-(1, '1/4 de Pollo Pierna', 'Cuarto de pollo presa pierna con papas fritas, arroz y ensalada', 4.00, TRUE, 20),
-(1, '1/8 de Pollo', 'Octavo de pollo asado al carbón con papas fritas, arroz y ensalada', 2.75, TRUE, 15),
-(2, 'Costillas BBQ', 'Tiernas costillas bañadas en salsa BBQ con papas y ensalada', 6.50, TRUE, 25),
-(2, 'Seco de Pollo', 'Estofado tradicional con arroz amarillo y maduro', 3.50, TRUE, 20),
-(3, 'Almuerzo Ejecutivo', 'Sopa del día + Segundo a elección + Jugo', 3.00, TRUE, 15),
-(3, 'Merienda', 'Opción ligera para la noche, incluye bebida', 2.50, TRUE, 15),
-(4, 'Gaseosa Personal', 'Gaseosa en presentación personal', 0.75, TRUE, 2),
-(4, 'Gaseosa 1.5 Litros', 'Gaseosa familiar de 1.5 litros', 2.00, TRUE, 2),
-(4, 'Jugo Natural', 'Jugo natural de frutas de temporada', 1.00, TRUE, 5),
-(4, 'Porción de Papas Fritas', 'Porción adicional de papas fritas crujientes', 1.50, TRUE, 10),
-(4, 'Porción de Arroz', 'Porción adicional de arroz', 1.00, TRUE, 5);
+-- Productos del Menú (con imágenes asignadas)
+INSERT INTO productos_menu (categoria_id, nombre, descripcion, precio_venta, tiene_iva, tiempo_preparacion, url_imagen) VALUES
+-- Pollos Asados al Carbón
+(1, 'Pollo Entero', 'Pollo entero asado al carbón con papas fritas, arroz y ensalada', 13.50, TRUE, 30, 'assets/images/menu-item-1.jpeg'),
+(1, '1/2 Pollo', 'Medio pollo asado al carbón con papas fritas, arroz y ensalada', 7.00, TRUE, 25, 'assets/images/menu-item-2.jpeg'),
+(1, '1/4 de Pollo Pechuga', 'Cuarto de pollo presa pechuga con papas fritas, arroz y ensalada', 4.00, TRUE, 20, 'assets/images/menu-item-3.jpeg'),
+(1, '1/4 de Pollo Pierna', 'Cuarto de pollo presa pierna con papas fritas, arroz y ensalada', 4.00, TRUE, 20, 'assets/images/menu-item-4.jpeg'),
+(1, '1/8 de Pollo', 'Octavo de pollo asado al carbón con papas fritas, arroz y ensalada', 2.75, TRUE, 15, 'assets/images/menu-item-5.jpeg'),
+-- Especialidades de la Casa
+(2, 'Costillas BBQ', 'Tiernas costillas bañadas en salsa BBQ con papas y ensalada', 6.50, TRUE, 25, 'assets/images/menu-item-6.jpeg'),
+(2, 'Seco de Pollo', 'Estofado tradicional con arroz amarillo y maduro', 3.50, TRUE, 20, 'assets/images/menu-item-7.jpeg'),
+-- Menú Diario
+(3, 'Almuerzo Ejecutivo', 'Sopa del día + Segundo a elección + Jugo', 3.00, TRUE, 15, 'assets/images/menu-item-8.jpeg'),
+(3, 'Merienda', 'Opción ligera para la noche, incluye bebida', 2.50, TRUE, 15, 'assets/images/menu-item-9.jpeg'),
+-- Bebidas y Extras
+(4, 'Gaseosa Personal', 'Gaseosa en presentación personal', 0.75, TRUE, 2, 'assets/images/menu-item-10.jpeg'),
+(4, 'Gaseosa 1.5 Litros', 'Gaseosa familiar de 1.5 litros', 2.00, TRUE, 2, 'assets/images/menu-item-11.jpeg'),
+(4, 'Jugo Natural', 'Jugo natural de frutas de temporada', 1.00, TRUE, 5, 'assets/images/menu-item-12.jpeg'),
+(4, 'Porción de Papas Fritas', 'Porción adicional de papas fritas crujientes', 1.50, TRUE, 10, 'assets/images/menu-item-13.jpeg'),
+(4, 'Porción de Arroz', 'Porción adicional de arroz', 1.00, TRUE, 5, 'assets/images/menu-item-13.jpeg');
 
+-- Categorías de Insumos
 INSERT INTO categorias_insumos (nombre) VALUES 
 ('Carnes y Pollos'), ('Verduras y Ensaladas'), ('Bebidas'), ('Acompañamientos'), ('Salsas y Condimentos');
 
+-- Insumos (inventario)
 INSERT INTO insumos (categoria_id, nombre, unidad_medida, stock_actual, stock_minimo) VALUES
 (1, 'Pollo entero', 'unidad', 20, 5),
 (1, 'Costillas de cerdo', 'kg', 8, 2),
@@ -382,6 +402,7 @@ INSERT INTO insumos (categoria_id, nombre, unidad_medida, stock_actual, stock_mi
 (5, 'Salsa BBQ', 'litro', 5, 1),
 (5, 'Carbón vegetal', 'kg', 30, 10);
 
+-- Recetas (ingredientes por producto)
 INSERT INTO recetas (producto_id, insumo_id, cantidad) VALUES
 -- Pollo Entero: 1 pollo + papas + arroz + ensalada
 (1, 1, 1), (1, 5, 0.5), (1, 6, 0.3), (1, 3, 1), (1, 4, 0.1),
@@ -395,12 +416,3 @@ INSERT INTO recetas (producto_id, insumo_id, cantidad) VALUES
 (10, 7, 1),
 -- Gaseosa 1.5L
 (11, 8, 1);
-
-INSERT INTO clientes (tipo_documento, numero_documento, nombre_completo, telefono) VALUES
-('CEDULA', '1234567890', 'Juan Pérez', '0999999999');
-
-INSERT INTO usuarios (rol_id, nombre, email, contrasena_hash) VALUES
-(1, 'Admin', 'admin@lamocahua.com', SHA2('admin123', 256)),
-(2, 'Cajero', 'cajero@lamocahua.com', SHA2('cajero123', 256)),
-(4, 'Mesero', 'mesero@lamocahua.com', SHA2('mesero123', 256)),
-(3, 'Cocina', 'cocina@lamocahua.com', SHA2('cocina123', 256));
