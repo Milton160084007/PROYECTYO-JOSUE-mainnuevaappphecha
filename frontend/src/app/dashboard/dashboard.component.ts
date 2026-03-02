@@ -33,16 +33,16 @@ export class DashboardComponent implements OnInit {
     generateMenu() {
         const roleId = Number(this.currentUser?.role_id);
         const allItems = [
-            { icon: '📊', label: 'Dashboard', route: '/dashboard' },
-            { icon: '🍽️', label: 'Menú', route: '/menu' },
-            { icon: '📋', label: 'Pedidos', route: '/orders' },
-            { icon: '🔥', label: 'Cocina', route: '/kitchen' },
-            { icon: '👥', label: 'Clientes', route: '/clients' },
-            { icon: '📦', label: 'Inventario', route: '/inventory' },
-            { icon: '🏢', label: 'Proveedores', route: '/suppliers' },
-            { icon: '🛒', label: 'Compras', route: '/purchases' },
-            { icon: '🧾', label: 'Facturas', route: '/invoices' },
-            { icon: '👤', label: 'Usuarios', route: '/users' },
+            { icon: 'fa-chart-bar', label: 'Dashboard', route: '/dashboard' },
+            { icon: 'fa-utensils', label: 'Menú', route: '/menu' },
+            { icon: 'fa-clipboard-list', label: 'Pedidos', route: '/orders' },
+            { icon: 'fa-fire', label: 'Cocina', route: '/kitchen' },
+            { icon: 'fa-users', label: 'Clientes', route: '/clients' },
+            { icon: 'fa-boxes-stacked', label: 'Inventario', route: '/inventory' },
+            { icon: 'fa-building', label: 'Proveedores', route: '/suppliers' },
+            { icon: 'fa-cart-shopping', label: 'Compras', route: '/purchases' },
+            { icon: 'fa-file-invoice', label: 'Facturas', route: '/invoices' },
+            { icon: 'fa-user', label: 'Usuarios', route: '/users' },
         ];
 
         switch (roleId) {

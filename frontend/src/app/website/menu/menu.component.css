@@ -538,8 +538,12 @@
 }
 
 .footer-logo {
-    font-size: 48px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
     margin-bottom: 10px;
+    border: 2px solid rgba(255, 213, 79, 0.5);
 }
 
 .footer-brand h3 {

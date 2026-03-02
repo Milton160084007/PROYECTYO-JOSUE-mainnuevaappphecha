@@ -4,10 +4,10 @@ import { Router } from '@angular/router';
 import { ApiService } from '../services/api.service';
 
 @Component({
-    selector: 'app-kitchen',
-    standalone: true,
-    imports: [CommonModule],
-    template: `
+  selector: 'app-kitchen',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
     <div class="kitchen-page">
       <div class="kitchen-header">
         <h1>🔥 Pantalla de Cocina</h1>
@@ -50,7 +50,7 @@ import { ApiService } from '../services/api.service';
       }
     </div>
     `,
-    styles: [`
+  styles: [`
       .kitchen-page { padding: 30px; }
       .kitchen-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
       .kitchen-header h1 { font-size: 1.5rem; }
@@ -70,37 +70,37 @@ import { ApiService } from '../services/api.service';
     `]
 })
 export class KitchenComponent implements OnInit, OnDestroy {
-    pendingOrders: any[] = [];
-    private intervalId: any;
+  pendingOrders: any[] = [];
+  private intervalId: any;
 
-    constructor(private api: ApiService, private router: Router) { }
+  constructor(private api: ApiService, private router: Router) { }
 
-    ngOnInit() {
-        this.loadOrders();
-        this.intervalId = setInterval(() => this.loadOrders(), 15000);
-    }
+  ngOnInit() {
+    this.loadOrders();
+    this.intervalId = setInterval(() => this.loadOrders(), 15000);
+  }
 
-    ngOnDestroy() {
-        if (this.intervalId) clearInterval(this.intervalId);
-    }
+  ngOnDestroy() {
+    if (this.intervalId) clearInterval(this.intervalId);
+  }
 
-    loadOrders() {
-        this.api.getOrders().subscribe({
-            next: (r: any) => {
-                this.pendingOrders = (r.records || []).filter((o: any) =>
-                    o.estado === 'PENDIENTE' || o.estado === 'EN_PREPARACION'
-                );
-            }
-        });
-    }
+  loadOrders() {
+    this.api.getOrders().subscribe({
+      next: (r: any) => {
+        this.pendingOrders = (r.records || []).filter((o: any) =>
+          o.estado === 'PENDIENTE' || o.estado === 'EN_PREPARACION'
+        );
+      }
+    });
+  }
 
-    startPreparing(id: number) {
-        this.api.updateOrderStatus(id, 'EN_PREPARACION').subscribe({ next: () => this.loadOrders() });
-    }
+  startPreparing(id: number) {
+    this.api.updateOrderStatus(id, 'EN_PREPARACION').subscribe({ next: () => this.loadOrders() });
+  }
 
-    markReady(id: number) {
-        this.api.updateOrderStatus(id, 'LISTO').subscribe({ next: () => this.loadOrders() });
-    }
+  markReady(id: number) {
+    this.api.updateOrderStatus(id, 'LISTO').subscribe({ next: () => this.loadOrders() });
+  }
 
-    goBack() { this.router.navigate(['/dashboard']); }
+  goBack() { this.router.navigate(['/dashboard']); }
 }

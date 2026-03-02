@@ -19,11 +19,11 @@
             </ng-container>
 
             <ng-container *ngIf="isClientLoggedIn">
-                <a routerLink="/website/my-orders" class="nav-link">Mis Pedidos</a>
-                <button class="nav-link cart-btn" (click)="showCartModal = true">
-                    <i class="fas fa-shopping-cart"></i> Mi Carrito
+                <a routerLink="/website/cart" class="nav-link">
+                    Mi Carrito
                     <span class="cart-badge" *ngIf="getCartCount() > 0">{{ getCartCount() }}</span>
-                </button>
+                </a>
+                <a routerLink="/website/my-orders" class="nav-link">Mis Pedidos</a>
                 <div class="user-menu">
                     <span class="user-greeting">Hola, {{ clientUser?.name }}</span>
                     <button class="btn-logout" (click)="logout()"><i class="fas fa-sign-out-alt"></i> Salir</button>
@@ -36,7 +36,7 @@
     <header class="hero-section">
         <div class="hero-overlay"></div>
         <div class="hero-content">
-            <span class="hero-badge">🔥 Pollos Asados al Carbón</span>
+            <span class="hero-badge"><i class="fas fa-fire-alt"></i> Pollos Asados al Carbón</span>
             <h1>Asadero La Mocahua</h1>
             <p>La Tradición del buen sabor. Desde nuestro asador a tu mesa con el auténtico sabor a carbón.</p>
             <div class="hero-info">
@@ -95,7 +95,7 @@
                 <div class="product-image">
                     <img [src]="product.url_imagen || 'https://images.unsplash.com/photo-1598103442097-8b74df4e1b8d?q=80&w=800&auto=format&fit=crop'"
                         [alt]="product.nombre">
-                    <div class="product-badge" *ngIf="product.precio_venta >= 10">⭐ Popular</div>
+                    <div class="product-badge" *ngIf="product.precio_venta >= 10">Popular</div>
                 </div>
                 <div class="product-info">
                     <div class="title-price">
@@ -130,67 +130,13 @@
         </ng-template>
     </main>
 
-    <!-- Cart Modal -->
-    <div class="modal-overlay" *ngIf="showCartModal" (click)="showCartModal = false">
-        <div class="modal-content side-panel" (click)="$event.stopPropagation()">
-            <div class="modal-header">
-                <h2>🛒 Tu Carrito</h2>
-                <button class="close-btn" (click)="showCartModal = false">&times;</button>
-            </div>
 
-            <div class="cart-items" *ngIf="cart.length > 0">
-                <div class="cart-item" *ngFor="let item of cart">
-                    <div class="item-details">
-                        <h4>{{ item.nombre }}</h4>
-                        <span class="item-price">${{ item.precio_unitario }}</span>
-                    </div>
-                    <div class="item-actions">
-                        <button class="qty-btn" (click)="removeFromCart(item.producto_id)">-</button>
-                        <span>{{ item.cantidad }}</span>
-                        <button class="qty-btn"
-                            (click)="handleOrder({id: item.producto_id, nombre: item.nombre, precio_venta: item.precio_unitario, tiene_iva: item.tiene_iva})">+</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="empty-cart" *ngIf="cart.length === 0">
-                <i class="fas fa-shopping-basket"></i>
-                <p>Tu carrito está vacío</p>
-            </div>
-
-            <div class="cart-footer" *ngIf="cart.length > 0">
-                <div class="order-settings">
-                    <label>Tipo de Consumo:</label>
-                    <select [(ngModel)]="orderType">
-                        <option value="LOCAL">Comer Aquí</option>
-                        <option value="PARA_LLEVAR">Para Llevar</option>
-                        <option value="DOMICILIO">A Domicilio</option>
-                    </select>
-                </div>
-
-                <div class="order-settings" *ngIf="orderType === 'LOCAL'">
-                    <label>Número de Mesa:</label>
-                    <input type="number" [(ngModel)]="tableNumber" placeholder="Nro de Mesa">
-                </div>
-
-                <div class="cart-total">
-                    <span>Total Estimado</span>
-                    <strong>${{ getCartTotal().toFixed(2) }}</strong>
-                </div>
-                <!-- Nota: El monto exacto con IVA se calcula en el Backend -->
-
-                <button class="btn-submit-order" (click)="submitOrder()">
-                    <i class="fas fa-check-circle"></i> Procesar Pedido
-                </button>
-            </div>
-        </div>
-    </div>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-brand">
-                <span class="footer-logo">🍗</span>
+                <img src="assets/images/menu-item-11.jpeg" alt="Logo La Mocahua" class="footer-logo">
                 <h3>Asadero La Mocahua</h3>
                 <p>La Tradición del buen sabor</p>
             </div>

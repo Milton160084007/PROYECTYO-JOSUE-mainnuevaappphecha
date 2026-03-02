@@ -9,14 +9,14 @@
             @for (item of getMenuItems(); track item.route) {
             <a class="nav-item" [routerLink]="item.route" routerLinkActive="active"
                 [routerLinkActiveOptions]="{exact: true}">
-                <span class="nav-icon">{{ item.icon }}</span>
+                <span class="nav-icon"><i class="fas" [ngClass]="item.icon"></i></span>
                 <span class="nav-label">{{ item.label }}</span>
             </a>
             }
         </nav>
         <div class="sidebar-footer">
             <button class="logout-btn" (click)="logout()">
-                🚪 <span>Cerrar Sesión</span>
+                <i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span>
             </button>
         </div>
     </aside>
@@ -24,7 +24,7 @@
     <!-- Main Content -->
     <main class="main-content">
         <header class="top-bar">
-            <button class="menu-toggle" (click)="toggleSidebar()">☰</button>
+            <button class="menu-toggle" (click)="toggleSidebar()"><i class="fas fa-bars"></i></button>
             <div class="top-bar-right">
                 <span class="user-role-badge">{{ currentUser?.role_name }}</span>
                 <span class="user-name">{{ currentUser?.name }}</span>
@@ -34,7 +34,7 @@
         <div class="content-area">
             <div class="welcome-banner">
                 <div>
-                    <h1>Bienvenido, {{ currentUser?.name }} 👋</h1>
+                    <h1>Bienvenido, {{ currentUser?.name }}</h1>
                     <p>Panel de control — {{ currentUser?.role_name }}</p>
                 </div>
             </div>
@@ -42,28 +42,28 @@
             <!-- Stats Cards -->
             <div class="stats-grid">
                 <div class="stat-card stat-orders">
-                    <div class="stat-icon">📋</div>
+                    <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
                     <div class="stat-info">
                         <span class="stat-value">{{ stats.pedidos_hoy || 0 }}</span>
                         <span class="stat-label">Pedidos Hoy</span>
                     </div>
                 </div>
                 <div class="stat-card stat-revenue">
-                    <div class="stat-icon">💰</div>
+                    <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
                     <div class="stat-info">
                         <span class="stat-value">${{ stats.ventas_hoy || '0.00' }}</span>
                         <span class="stat-label">Ventas Hoy</span>
                     </div>
                 </div>
                 <div class="stat-card stat-pending">
-                    <div class="stat-icon">⏳</div>
+                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
                     <div class="stat-info">
                         <span class="stat-value">{{ stats.pedidos_pendientes || 0 }}</span>
                         <span class="stat-label">Pendientes</span>
                     </div>
                 </div>
                 <div class="stat-card stat-stock">
-                    <div class="stat-icon">⚠️</div>
+                    <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
                     <div class="stat-info">
                         <span class="stat-value">{{ stats.insumos_stock_bajo || 0 }}</span>
                         <span class="stat-label">Stock Bajo</span>

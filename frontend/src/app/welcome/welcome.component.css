@@ -19,10 +19,14 @@
 }
 
 .logo-icon {
-    font-size: 64px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
     display: block;
-    margin-bottom: 12px;
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    margin: 0 auto 12px auto;
+    border: 3px solid rgba(255, 213, 79, 0.5);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .welcome-header h1 {

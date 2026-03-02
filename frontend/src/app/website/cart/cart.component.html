@@ -1,0 +1,105 @@
+<div class="cart-page">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="brand">
+            <img src="assets/images/menu-item-11.jpeg" alt="Logo La Mocahua" class="brand-logo">
+            <div class="brand-text">
+                <span class="brand-name">Asadero La Mocahua</span>
+                <span class="brand-slogan">La Tradición del buen sabor</span>
+            </div>
+        </div>
+        <div class="nav-links">
+            <a routerLink="/welcome" class="nav-link">Inicio</a>
+            <a routerLink="/website/menu" class="nav-link">Menú</a>
+            <a routerLink="/website/cart" class="nav-link active">Mi Carrito
+                <span class="cart-count" *ngIf="cartService.getCount() > 0">{{ cartService.getCount() }}</span>
+            </a>
+            <a routerLink="/website/my-orders" class="nav-link">Mis Pedidos</a>
+            <div class="user-menu" *ngIf="isClientLoggedIn">
+                <span class="user-greeting">Hola, {{ clientUser?.name }}</span>
+                <button class="btn-logout" (click)="logout()"><i class="fas fa-sign-out-alt"></i> Salir</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="cart-container">
+        <div class="page-header">
+            <h2><i class="fas fa-shopping-cart"></i> Mi Carrito</h2>
+            <a routerLink="/website/menu" class="btn-secondary"><i class="fas fa-arrow-left"></i> Seguir comprando</a>
+        </div>
+
+        <!-- Cart items -->
+        <div class="cart-content" *ngIf="cartService.getItems().length > 0">
+            <div class="cart-items-section">
+                <div class="cart-item" *ngFor="let item of cartService.getItems()">
+                    <div class="item-info">
+                        <h4>{{ item.nombre }}</h4>
+                        <span class="item-price">${{ item.precio_unitario.toFixed(2) }}</span>
+                    </div>
+                    <div class="item-controls">
+                        <button class="qty-btn" (click)="removeOne(item.producto_id)">-</button>
+                        <span class="qty-value">{{ item.cantidad }}</span>
+                        <button class="qty-btn" (click)="addOne(item)">+</button>
+                    </div>
+                    <div class="item-subtotal">
+                        <strong>${{ (item.precio_unitario * item.cantidad).toFixed(2) }}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order summary sidebar -->
+            <div class="order-summary">
+                <h3>Resumen del Pedido</h3>
+
+                <div class="summary-row">
+                    <span>Productos ({{ cartService.getCount() }})</span>
+                    <span>${{ cartService.getTotal().toFixed(2) }}</span>
+                </div>
+
+                <hr>
+
+                <div class="summary-row total-row">
+                    <strong>Total Estimado</strong>
+                    <strong>${{ cartService.getTotal().toFixed(2) }}</strong>
+                </div>
+
+                <p class="tax-note">El monto exacto con IVA se calcula al procesar</p>
+
+                <div class="order-options">
+                    <div class="form-group">
+                        <label>Tipo de Consumo</label>
+                        <select [(ngModel)]="cartService.orderType">
+                            <option value="LOCAL">Comer Aquí</option>
+                            <option value="PARA_LLEVAR">Para Llevar</option>
+                            <option value="DOMICILIO">A Domicilio</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" *ngIf="cartService.orderType === 'LOCAL'">
+                        <label>Número de Mesa</label>
+                        <input type="number" [(ngModel)]="cartService.tableNumber" placeholder="Nro de Mesa">
+                    </div>
+                </div>
+
+                <button class="btn-submit" [disabled]="submitting" (click)="submitOrder()">
+                    <span *ngIf="!submitting"><i class="fas fa-check-circle"></i> Procesar Pedido</span>
+                    <span *ngIf="submitting">Procesando...</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Empty state -->
+        <div class="empty-state" *ngIf="cartService.getItems().length === 0">
+            <i class="fas fa-shopping-basket"></i>
+            <h3>Tu carrito está vacío</h3>
+            <p>Explora nuestro menú y agrega productos.</p>
+            <a routerLink="/website/menu" class="btn-primary">Ir al Menú</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-bottom">
+            <p>&copy; 2026 Asadero La Mocahua. Tu mejor elección.</p>
+        </div>
+    </footer>
+</div>

@@ -14,6 +14,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
 import { WebsiteMenuComponent } from './website/menu/menu.component';
 import { MyOrdersComponent } from './website/my-orders/my-orders.component';
 import { PurchasesComponent } from './purchases/purchases.component';
+import { CartComponent } from './website/cart/cart.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/welcome', pathMatch: 'full' },
@@ -21,6 +22,7 @@ export const routes: Routes = [
     { path: 'website/register', component: RegisterComponent },
     { path: 'website/menu', component: WebsiteMenuComponent },
     { path: 'website/my-orders', component: MyOrdersComponent },
+    { path: 'website/cart', component: CartComponent },
     { path: 'login', component: LoginComponent },
     { path: 'dashboard', component: DashboardComponent },
     { path: 'menu', component: MenuComponent },

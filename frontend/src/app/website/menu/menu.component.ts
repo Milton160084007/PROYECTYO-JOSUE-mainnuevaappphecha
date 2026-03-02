@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../services/api.service';
+import { CartService } from '../../services/cart.service';
 
 @Component({
     selector: 'app-website-menu',
@@ -18,15 +19,15 @@ export class WebsiteMenuComponent implements OnInit {
     selectedCategory: number | null = null;
     loading = true;
 
-    // Cart and Session Logic
+    // Session
     isClientLoggedIn = false;
     clientUser: any = null;
-    cart: any[] = [];
-    showCartModal = false;
-    tableNumber: number | null = null;
-    orderType: string = 'LOCAL';
 
-    constructor(private api: ApiService, private router: Router) { }
+    constructor(
+        private api: ApiService,
+        private router: Router,
+        public cartService: CartService
+    ) { }
 
     ngOnInit(): void {
         this.checkSession();
@@ -48,7 +49,7 @@ export class WebsiteMenuComponent implements OnInit {
         localStorage.removeItem('user');
         this.isClientLoggedIn = false;
         this.clientUser = null;
-        this.cart = [];
+        this.cartService.clear();
     }
 
     loadData() {
@@ -86,67 +87,15 @@ export class WebsiteMenuComponent implements OnInit {
         }
     }
 
-    // Cart Operations
     handleOrder(product: any) {
         if (!this.isClientLoggedIn) {
             this.promptLogin();
             return;
         }
-
-        const existing = this.cart.find(c => c.producto_id === product.id);
-        if (existing) {
-            existing.cantidad++;
-        } else {
-            this.cart.push({
-                producto_id: product.id,
-                nombre: product.nombre,
-                precio_unitario: parseFloat(product.precio_venta),
-                cantidad: 1,
-                tiene_iva: product.tiene_iva
-            });
-        }
-        // Opcional: mostrar una notificacion "Producto agregado"
-    }
-
-    removeFromCart(productId: number) {
-        const existing = this.cart.find(c => c.producto_id === productId);
-        if (existing) {
-            existing.cantidad--;
-            if (existing.cantidad <= 0) {
-                this.cart = this.cart.filter(c => c.producto_id !== productId);
-            }
-        }
+        this.cartService.addItem(product);
     }
 
     getCartCount(): number {
-        return this.cart.reduce((sum, item) => sum + item.cantidad, 0);
-    }
-
-    getCartTotal(): number {
-        return this.cart.reduce((sum, item) => sum + item.precio_unitario * item.cantidad, 0);
-    }
-
-    submitOrder() {
-        if (this.orderType === 'LOCAL' && !this.tableNumber) {
-            alert('Por favor, indica tu número de mesa para consumo en local.');
-            return;
-        }
-
-        const orderData = {
-            usuario_id: this.clientUser.id,
-            numero_mesa: this.orderType === 'LOCAL' ? this.tableNumber : null,
-            tipo_pedido: this.orderType,
-            items_pedido: this.cart
-        };
-
-        this.api.createOrder(orderData).subscribe({
-            next: () => {
-                alert('¡Pedido creado exitosamente!');
-                this.cart = [];
-                this.showCartModal = false;
-                this.router.navigate(['/website/my-orders']);
-            },
-            error: (err: any) => alert(err.error?.message || 'Error al procesar el pedido')
-        });
+        return this.cartService.getCount();
     }
 }

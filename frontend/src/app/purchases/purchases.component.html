@@ -1,6 +1,6 @@
 <div class="module-page">
     <div class="page-header">
-        <h2>🛒 Gestión de Compras</h2>
+        <h2><i class="fas fa-cart-shopping"></i> Gestión de Compras</h2>
         <div class="header-actions">
             <button class="btn btn-secondary" (click)="goBack()">← Volver</button>
             <button class="btn btn-primary" (click)="openNewPurchaseModal()">+ Registrar Compra</button>
@@ -12,11 +12,11 @@
         <h3 class="section-title">Historial de Compras</h3>
 
         @if (loading) {
-        <div class="empty-state"><span>⏳</span>
+        <div class="empty-state"><span><i class="fas fa-spinner fa-spin"></i></span>
             <p>Cargando historial...</p>
         </div>
         } @else if (purchases.length === 0) {
-        <div class="empty-state"><span>🛒</span>
+        <div class="empty-state"><span><i class="fas fa-cart-shopping"></i></span>
             <p>No hay compras registradas</p>
         </div>
         } @else {

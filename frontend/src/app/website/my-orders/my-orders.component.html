@@ -1,13 +1,17 @@
 <div class="my-orders-page">
-    <!-- Navbar -->
+    <!-- Navbar (same as menu page) -->
     <nav class="navbar">
         <div class="brand">
-            <i class="fas fa-utensils"></i>
-            <span>La Mocahua</span>
+            <img src="assets/images/menu-item-11.jpeg" alt="Logo La Mocahua" class="brand-logo">
+            <div class="brand-text">
+                <span class="brand-name">Asadero La Mocahua</span>
+                <span class="brand-slogan">La Tradición del buen sabor</span>
+            </div>
         </div>
         <div class="nav-links">
             <a routerLink="/welcome" class="nav-link">Inicio</a>
             <a routerLink="/website/menu" class="nav-link">Menú</a>
+            <a routerLink="/website/cart" class="nav-link">Mi Carrito</a>
             <a routerLink="/website/my-orders" class="nav-link active">Mis Pedidos</a>
             <div class="user-menu">
                 <span class="user-greeting">Hola, {{ clientUser?.name }}</span>
@@ -27,8 +31,7 @@
                 <div class="order-header">
                     <div>
                         <span class="order-number">Pedido #{{ order.id }}</span>
-                        <span class="order-type badge-{{ order.tipo_pedido.toLowerCase() }}">{{ order.tipo_pedido
-                            }}</span>
+                        <span class="order-type">{{ order.tipo_pedido }}</span>
                     </div>
                     <div>
                         <span class="order-date">{{ order.fecha_creacion }}</span>
@@ -54,7 +57,7 @@
         <div class="empty-state" *ngIf="!loading && orders.length === 0">
             <i class="fas fa-box-open"></i>
             <h3>No tienes pedidos aún</h3>
-            <p>¡Explora nuestro delicioso menú y haz tu primer pedido hoy mismo!</p>
+            <p>Explora nuestro menú y haz tu primer pedido.</p>
             <button routerLink="/website/menu" class="btn-primary mt-3">Ir al Menú</button>
         </div>
 
@@ -65,6 +68,8 @@
     </main>
 
     <footer class="footer">
-        <p>&copy; 2026 La Mocahua Restaurante. Tu mejor elección.</p>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Asadero La Mocahua. Tu mejor elección.</p>
+        </div>
     </footer>
 </div>

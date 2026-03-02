@@ -1,6 +1,6 @@
 <div class="module-page">
     <div class="page-header">
-        <h2>🏢 Proveedores</h2>
+        <h2><i class="fas fa-building"></i> Proveedores</h2>
         <div class="header-actions">
             <button class="btn btn-secondary" (click)="goBack()">← Volver</button>
             <button class="btn btn-primary" (click)="openForm()">+ Nuevo Proveedor</button>
@@ -16,7 +16,7 @@
         @for (s of filteredSuppliers(); track s.id) {
         <div class="supplier-card" [class.highlighted]="selectedSupplierId() === s.id">
             <div class="supplier-header">
-                <div class="supplier-icon">🏢</div>
+                <div class="supplier-icon"><i class="fas fa-building"></i></div>
                 <div class="supplier-meta">
                     <h3>{{ s.nombre_empresa }}</h3>
                     <span class="ruc-badge">RUC: {{ s.ruc || '—' }}</span>
@@ -24,15 +24,15 @@
             </div>
 
             <div class="supplier-details">
-                @if (s.contacto_nombre) { <div>👤 {{ s.contacto_nombre }}</div> }
-                @if (s.contacto_telefono) { <div>📞 {{ s.contacto_telefono }}</div> }
-                @if (s.contacto_email) { <div>📧 {{ s.contacto_email }}</div> }
-                @if (s.direccion) { <div>📍 {{ s.direccion }}</div> }
+                @if (s.contacto_nombre) { <div><i class="fas fa-user"></i> {{ s.contacto_nombre }}</div> }
+                @if (s.contacto_telefono) { <div><i class="fas fa-phone"></i> {{ s.contacto_telefono }}</div> }
+                @if (s.contacto_email) { <div><i class="fas fa-envelope"></i> {{ s.contacto_email }}</div> }
+                @if (s.direccion) { <div><i class="fas fa-map-marker-alt"></i> {{ s.direccion }}</div> }
             </div>
 
             <div class="supplier-purchases">
                 <button class="btn btn-sm btn-outline" (click)="togglePurchases(s.id)">
-                    📦 {{ selectedSupplierId() === s.id ? 'Ocultar compras' : 'Ver compras' }}
+                    <i class="fas fa-box"></i> {{ selectedSupplierId() === s.id ? 'Ocultar compras' : 'Ver compras' }}
                 </button>
                 @if (selectedSupplierId() === s.id && loadingPurchases()) {
                 <p class="no-purchases">Cargando...</p>
@@ -57,12 +57,13 @@
             </div>
 
             <div class="supplier-actions">
-                <button class="btn btn-sm btn-secondary" (click)="editSupplier(s)">✏️ Editar</button>
+                <button class="btn btn-sm btn-secondary" (click)="editSupplier(s)">Editar</button>
                 @if (confirmDeleteId() === s.id) {
                 <button class="btn btn-sm btn-warning" (click)="confirmDeleteId.set(null)">✕</button>
                 <button class="btn btn-sm btn-danger" (click)="doDelete(s.id)">✓ Eliminar</button>
                 } @else {
-                <button class="btn btn-sm btn-danger" (click)="confirmDeleteId.set(s.id)">🗑️</button>
+                <button class="btn btn-sm btn-danger" (click)="confirmDeleteId.set(s.id)"><i
+                        class="fas fa-trash"></i></button>
                 }
             </div>
         </div>
@@ -70,7 +71,7 @@
     </div>
 
     @if (filteredSuppliers().length === 0) {
-    <div class="empty-state"><span>🏢</span>
+    <div class="empty-state"><span><i class="fas fa-building"></i></span>
         <p>No hay proveedores registrados</p>
     </div>
     }
