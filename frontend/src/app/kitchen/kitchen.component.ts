@@ -32,6 +32,30 @@ import { ApiService } from '../services/api.service';
                 <span>📦 {{ order.tipo_pedido }}</span>
               </div>
               <p class="order-time">{{ order.fecha_creacion }}</p>
+
+              <!-- Toggle detail button -->
+              <button class="btn-detail" (click)="toggleDetail(order)">
+                {{ order._showDetail ? '▲ Ocultar Detalle' : '▼ Ver Detalle del Pedido' }}
+              </button>
+
+              <!-- Order detail items -->
+              @if (order._showDetail) {
+                @if (order._loadingDetail) {
+                  <div class="detail-loading">Cargando detalle...</div>
+                } @else if (order._detalles && order._detalles.length > 0) {
+                  <div class="detail-section">
+                    <div class="detail-title">Productos a preparar:</div>
+                    @for (item of order._detalles; track item.producto_id) {
+                      <div class="detail-item">
+                        <span class="detail-qty">{{ item.cantidad }}x</span>
+                        <span class="detail-name">{{ item.nombre_producto || item.nombre }}</span>
+                      </div>
+                    }
+                  </div>
+                } @else {
+                  <div class="detail-loading">Sin detalle disponible.</div>
+                }
+              }
             </div>
             <div class="card-actions">
               @if (order.estado === 'PENDIENTE') {
@@ -64,9 +88,65 @@ import { ApiService } from '../services/api.service';
       .order-id { font-weight: 800; font-size: 1.2rem; color: #1e293b; }
       .card-body { padding: 16px 20px; }
       .order-meta { display: flex; gap: 16px; font-size: 14px; color: #475569; margin-bottom: 8px; }
-      .order-time { font-size: 12px; color: #94a3b8; }
+      .order-time { font-size: 12px; color: #94a3b8; margin-bottom: 12px; }
       .card-actions { padding: 12px 20px; border-top: 1px solid #e2e8f0; }
       .card-actions .btn { width: 100%; justify-content: center; }
+
+      /* Detail toggle button */
+      .btn-detail {
+        width: 100%;
+        padding: 10px 16px;
+        background: #f1f5f9;
+        color: #475569;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: inherit;
+        margin-bottom: 4px;
+      }
+      .btn-detail:hover { background: #e2e8f0; color: #1e293b; }
+
+      /* Detail section */
+      .detail-section {
+        margin-top: 12px;
+        background: #fffbf5;
+        border: 1px solid #f0e0c8;
+        border-radius: 10px;
+        padding: 14px;
+      }
+      .detail-title {
+        font-size: 12px;
+        font-weight: 700;
+        color: #92400e;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 10px;
+      }
+      .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 0;
+        border-bottom: 1px solid #f0e0c8;
+        font-size: 15px;
+        color: #1e293b;
+      }
+      .detail-item:last-child { border-bottom: none; }
+      .detail-qty {
+        background: #d4710e;
+        color: white;
+        font-weight: 700;
+        font-size: 13px;
+        padding: 3px 10px;
+        border-radius: 6px;
+        min-width: 36px;
+        text-align: center;
+      }
+      .detail-name { font-weight: 500; }
+      .detail-loading { margin-top: 10px; font-size: 13px; color: #94a3b8; font-style: italic; text-align: center; padding: 10px; }
     `]
 })
 export class KitchenComponent implements OnInit, OnDestroy {
@@ -87,11 +167,44 @@ export class KitchenComponent implements OnInit, OnDestroy {
   loadOrders() {
     this.api.getOrders().subscribe({
       next: (r: any) => {
-        this.pendingOrders = (r.records || []).filter((o: any) =>
+        const newOrders = (r.records || []).filter((o: any) =>
           o.estado === 'PENDIENTE' || o.estado === 'EN_PREPARACION'
         );
+        // Preserve expanded state and loaded details
+        newOrders.forEach((o: any) => {
+          const existing = this.pendingOrders.find((e: any) => e.id === o.id);
+          if (existing) {
+            o._showDetail = existing._showDetail;
+            o._detalles = existing._detalles;
+            o._loadingDetail = false;
+          }
+        });
+        this.pendingOrders = newOrders;
       }
     });
+  }
+
+  toggleDetail(order: any) {
+    if (order._showDetail) {
+      order._showDetail = false;
+      return;
+    }
+    order._showDetail = true;
+
+    // Load details if not already loaded
+    if (!order._detalles) {
+      order._loadingDetail = true;
+      this.api.getOrderById(order.id).subscribe({
+        next: (data: any) => {
+          order._detalles = data.detalles || [];
+          order._loadingDetail = false;
+        },
+        error: () => {
+          order._detalles = [];
+          order._loadingDetail = false;
+        }
+      });
+    }
   }
 
   startPreparing(id: number) {
