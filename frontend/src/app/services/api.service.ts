@@ -22,6 +22,9 @@ export class ApiService {
     getDashboardStats(): Observable<any> {
         return this.http.get(`${this.apiUrl}/dashboard_stats.php`);
     }
+    getReport(type: 'weekly' | 'monthly'): Observable<any> {
+        return this.http.get(`${this.apiUrl}/reports.php?type=${type}`);
+    }
 
     // Products
     getProducts(): Observable<any> {
@@ -44,6 +47,12 @@ export class ApiService {
     }
     createMenuCategory(data: any): Observable<any> {
         return this.http.post(`${this.apiUrl}/products.php`, { ...data, action: 'create_category' });
+    }
+    updateMenuCategory(data: any): Observable<any> {
+        return this.http.put(`${this.apiUrl}/products.php`, { ...data, action: 'update_category' });
+    }
+    deleteMenuCategory(id: number): Observable<any> {
+        return this.http.delete(`${this.apiUrl}/products.php?category_id=${id}`);
     }
 
     // Orders
@@ -69,8 +78,14 @@ export class ApiService {
     getInvoices(): Observable<any> {
         return this.http.get(`${this.apiUrl}/invoices.php`);
     }
+    getInvoiceById(id: number): Observable<any> {
+        return this.http.get(`${this.apiUrl}/invoices.php?id=${id}`);
+    }
     createInvoice(data: any): Observable<any> {
         return this.http.post(`${this.apiUrl}/invoices.php`, data);
+    }
+    anularInvoice(id: number): Observable<any> {
+        return this.http.put(`${this.apiUrl}/invoices.php`, { id, anular: true });
     }
 
     // Clients

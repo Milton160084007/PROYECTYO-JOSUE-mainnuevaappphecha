@@ -140,10 +140,19 @@ export class PurchasesComponent implements OnInit {
             return;
         }
 
+        const total = this.getPurchaseTotal();
+        const subtotal = total / 1.15;
+        const iva = total - subtotal;
+
         const payload = {
             usuario_id: this.currentUser.id,
             proveedor_id: this.selectedSupplierId,
             numero_factura: this.numFactura,
+            fecha_compra: new Date().toISOString().split('T')[0],
+            subtotal: subtotal.toFixed(2),
+            iva: iva.toFixed(2),
+            total: total.toFixed(2),
+            observaciones: 'Compra desde panel admin',
             detalles: this.cartItems
         };
 

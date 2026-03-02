@@ -20,7 +20,15 @@ switch($method) {
             $all = isset($_GET['all']) && $_GET['all'] == '1';
             $stmt = $all ? $product->readAll() : $product->read();
             $items = [];
-            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) { $items[] = $row; }
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+                $recipeStmt = $product->getRecipe($row['id']);
+                $recipe = [];
+                while($r = $recipeStmt->fetch(PDO::FETCH_ASSOC)) {
+                    $recipe[] = $r;
+                }
+                $row['receta'] = $recipe;
+                $items[] = $row; 
+            }
             http_response_code(200);
             echo json_encode(["records" => $items]);
         }
@@ -45,6 +53,9 @@ switch($method) {
             $product->url_imagen = $data->url_imagen ?? '';
             $product->tiempo_preparacion = $data->tiempo_preparacion ?? null;
             if($product->create()) {
+                if(isset($data->receta) && is_array($data->receta)) {
+                    $product->saveRecipe($product->id, $data->receta);
+                }
                 http_response_code(201);
                 echo json_encode(["message" => "Producto creado.", "id" => $product->id]);
             } else {
@@ -56,30 +67,52 @@ switch($method) {
 
     case 'PUT':
         $data = json_decode(file_get_contents("php://input"));
-        $product->id = $data->id;
-        $product->categoria_id = $data->categoria_id;
-        $product->nombre = $data->nombre;
-        $product->descripcion = $data->descripcion ?? '';
-        $product->precio_venta = $data->precio_venta;
-        $product->tiene_iva = $data->tiene_iva ?? 1;
-        $product->url_imagen = $data->url_imagen ?? '';
-        $product->tiempo_preparacion = $data->tiempo_preparacion ?? null;
-        $product->activo = $data->activo ?? 1;
-        if($product->update()) {
-            echo json_encode(["message" => "Producto actualizado."]);
+        if(isset($data->action) && $data->action === 'update_category') {
+            if($product->updateCategory($data->id, $data->nombre, $data->descripcion ?? '')) {
+                echo json_encode(["message" => "Categoría actualizada."]);
+            } else {
+                http_response_code(503);
+                echo json_encode(["message" => "Error al actualizar categoría."]);
+            }
         } else {
-            http_response_code(503);
-            echo json_encode(["message" => "Error al actualizar producto."]);
+            $product->id = $data->id;
+            $product->categoria_id = $data->categoria_id;
+            $product->nombre = $data->nombre;
+            $product->descripcion = $data->descripcion ?? '';
+            $product->precio_venta = $data->precio_venta;
+            $product->tiene_iva = $data->tiene_iva ?? 1;
+            $product->url_imagen = $data->url_imagen ?? '';
+            $product->tiempo_preparacion = $data->tiempo_preparacion ?? null;
+            $product->activo = $data->activo ?? 1;
+            if($product->update()) {
+                if(isset($data->receta) && is_array($data->receta)) {
+                    $product->saveRecipe($product->id, $data->receta);
+                }
+                echo json_encode(["message" => "Producto actualizado."]);
+            } else {
+                http_response_code(503);
+                echo json_encode(["message" => "Error al actualizar producto."]);
+            }
         }
         break;
 
     case 'DELETE':
-        $id = isset($_GET['id']) ? $_GET['id'] : null;
-        if($id && $product->delete($id)) {
-            echo json_encode(["message" => "Producto eliminado."]);
+        if(isset($_GET['category_id'])) {
+            $catId = $_GET['category_id'];
+            if($product->deleteCategory($catId)) {
+                echo json_encode(["message" => "Categoría eliminada."]);
+            } else {
+                http_response_code(400);
+                echo json_encode(["message" => "Error al eliminar categoría."]);
+            }
         } else {
-            http_response_code(400);
-            echo json_encode(["message" => "Error al eliminar producto."]);
+            $id = isset($_GET['id']) ? $_GET['id'] : null;
+            if($id && $product->delete($id)) {
+                echo json_encode(["message" => "Producto eliminado."]);
+            } else {
+                http_response_code(400);
+                echo json_encode(["message" => "Error al eliminar producto."]);
+            }
         }
         break;
 }

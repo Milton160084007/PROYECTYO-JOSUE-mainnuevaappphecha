@@ -2,7 +2,7 @@
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-header">
-            <span class="logo">🍗</span>
+            <img src="assets/images/menu-item-11.jpeg" alt="Logo La Mocahua" class="sidebar-logo">
             <h2>Asadero La Mocahua</h2>
         </div>
         <nav class="sidebar-nav">
@@ -71,20 +71,6 @@
                 </div>
             </div>
 
-            <!-- Quick Actions -->
-            <div class="section-header">
-                <h2>Acciones Rápidas</h2>
-            </div>
-            <div class="quick-actions-grid">
-                @for (item of getMenuItems(); track item.route) {
-                @if (item.route !== '/dashboard') {
-                <div class="action-card" (click)="navigate(item.route)">
-                    <span class="action-icon">{{ item.icon }}</span>
-                    <h3>{{ item.label }}</h3>
-                </div>
-                }
-                }
-            </div>
 
             <!-- Recent Orders -->
             @if (stats.ultimos_pedidos && stats.ultimos_pedidos.length > 0) {
